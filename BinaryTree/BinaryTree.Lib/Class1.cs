@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 /// <summary>
 ///     constuctor: special methods; call method in a class
 ///                 creates instance of an object
-///     properties: specia methods; getter & setter (doesn't need arguments)
+///     properties: special methods; getter & setter (doesn't need arguments)
 ///                 performs function within the library
 /// </summary>
 
@@ -74,7 +74,6 @@ namespace BinaryTree.Lib
         {
             return (_LHS == null ^ _RHS == null);
         }
-            return
     }
 
 }
