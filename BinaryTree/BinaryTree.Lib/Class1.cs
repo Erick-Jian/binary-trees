@@ -18,102 +18,114 @@ using System.Threading.Tasks;
 ///         Lowest common ancestor of two values
 ///         Delete a value 
 ///         Output in order, i.e. In-order traversal 
-
 /// </summary>
 
 namespace BinaryTree.Lib
 {
-    internal class BinaryTree
+    public class BinaryTree
     {
-        BinaryTreeNode _Root;      // root position (the container)
+        private BinaryTreeNode root;      // root position (the container)
+        public BinaryTreeNode Root
+        {   get { return root; }   }
 
-        internal BinaryTree()
+        public BinaryTree()
         {
             // default constructor: null
         }
 
-        internal BinaryTree(int rootval)
+        public BinaryTree(int rootval)
         {
             // default constructor: with root value taken in
-            _Root = new BinaryTreeNode(rootval);      // generates an root node with initial I/P integer stored
+            root = new BinaryTreeNode(rootval);      // generates an root node with initial I/P integer stored
         }
 
         internal void Append(int newvalue)
         {
-            if (_Root == null)          // base case
-                _Root = new BinaryTreeNode(newvalue);    // if empty, add a node
-            _Root.Append(newvalue);     // passes into the binarytreenode class method
+            if (root == null)          // base case
+                root = new BinaryTreeNode(newvalue);    // if empty, add a node
+            root.Append(newvalue);     // passes into the binarytreenode class method
         }
 
-        internal void Remove(int existedvalue)
+        public void Remove(int existedvalue)
         {
-            if (_Root == null)
+            if (root == null)
                 throw new ArgumentNullException();
-            _Root.Remove(existedvalue);
+            root.Remove(existedvalue, Root);    
+            // it passed into the node class because user SHOULDN'T input the root node
         }
 
         internal bool IsRepeated(int newvalue)
         {
-
+            return (newvalue == 1);
         }
-
     }
 
-    internal class BinaryTreeNode
+    public class BinaryTreeNode
     {
-        int _Value;     // head value
-        BinaryTreeNode _LHS;    
-        BinaryTreeNode _RHS;
+        private int value;              // head value
+        internal int Value
+        {   get { return value; }  }
+
+        private BinaryTreeNode lhs;    
+        internal BinaryTreeNode LHS     // keep lhs private, call LHS instead within the namespace
+        {   get { return lhs; }
+            set { lhs = value; }    }
+
+        private BinaryTreeNode rhs;
+        internal BinaryTreeNode RHS
+        {   get { return rhs; }
+            set { rhs = value; }    }
         
-        internal BinaryTreeNode (int newvalue)
-        {
-            _Value = newvalue;          // initial value
-        }
+        public BinaryTreeNode (int newvalue)
+        {   value = newvalue;      }    // value container
 
-        internal void Append (int newvalue)
+
+        public void Append (int newvalue)
         {
             // selection
-            if (_LHS == null && newvalue < _Value)
-                _LHS = new BinaryTreeNode(newvalue);    // add a new left node (from null)
+            if (lhs == null && newvalue < value)
+                lhs = new BinaryTreeNode(newvalue);    // add a new left node (from null)
             
-            else if (_RHS == null && newvalue >= _Value)
-                _RHS = new BinaryTreeNode(newvalue);    // add a new right node (from null)
+            else if (rhs == null && newvalue >= value)
+                rhs = new BinaryTreeNode(newvalue);    // add a new right node (from null)
             
-            (newvalue >= _Value ? _RHS : _LHS).Append(newvalue);        // tertiary operator + recursion
+            (newvalue >= value ? rhs : lhs).Append(newvalue);        // tertiary operator + recursion
             // Apply .Append on _LHS or _RHS via recursion
         }
 
-        internal void Remove (int existedvalue)
+        public void Remove (int disposedvalue, BinaryTreeNode ROOT)
         {
-            // selection
-            if (_LHS == null && existedvalue < _Value)
-                _LHS = _LHS._LHS;
+            BinaryTreeNode AncestorNode = ROOT;     // the ancestor of a root node is itself
+            BinaryTreeNode CurrentNode = ROOT;
+            
+            while (CurrentNode != null && CurrentNode.Value != disposedvalue)
+            {
 
-            else if (_RHS == null && existedvalue >= _Value)
-                _RHS = _RHS._RHS;
+                CurrentNode = (disposedvalue < value ? CurrentNode.lhs : CurrentNode.rhs);
+                AncestorNode = CurrentNode;         // prepared for
+            }
 
-            (existedvalue >= _Value ? _RHS : _LHS).Remove(existedvalue);        // tertiary operator + recursion
-            // Apply .Append on _LHS or _RHS via recursion
+
+            return; // CurrentNode = null
         }
 
         internal bool IsLeaf(BinaryTreeNode thenode)
         {
-            return (_LHS == null && _RHS == null);
+            return (lhs == null && rhs == null);
         }
 
         internal bool IsOneSideStem(BinaryTreeNode thenode)
         {
-            return (_LHS == null ^ _RHS == null);
+            return (lhs == null ^ rhs == null);
         }
 
         internal bool IsRepeated(int newvalue)
         {
-            if (_LHS == null || _RHS == null)
+            if (lhs == null || rhs == null)
             {
                 return false;
             }
         }
     }
-
 }
 
