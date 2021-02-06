@@ -9,50 +9,69 @@ using System.Threading.Tasks;
 ///                 creates instance of an object
 ///     properties: special methods; getter & setter (doesn't need arguments)
 ///                 performs function within the library
+///                 
+///     TASK:
+///         Insert a new value
+///         Check if a value is present
+///         Depth of the tree 
+///         Sum the tree 
+///         Lowest common ancestor of two values
+///         Delete a value 
+///         Output in order, i.e. In-order traversal 
+
 /// </summary>
 
 namespace BinaryTree.Lib
 {
-    public class Binary_Tree
+    internal class BinaryTree
     {
         BinaryTreeNode _Root;      // root position (the container)
 
-        public Binary_Tree()
+        internal BinaryTree()
         {
             // default constructor: null
         }
 
-        public Binary_Tree(int rootval)
+        internal BinaryTree(int rootval)
         {
             // default constructor: with root value taken in
             _Root = new BinaryTreeNode(rootval);      // generates an root node with initial I/P integer stored
         }
 
-        public void Append(int newvalue)       // It only adds value into the tree, so no input
+        internal void Append(int newvalue)
         {
-            if (_Root == null)      // base case
-            {
+            if (_Root == null)          // base case
                 _Root = new BinaryTreeNode(newvalue);    // if empty, add a node
-            }
-            _Root.Add(newvalue);    // goes into the binarytreenode
+            _Root.Append(newvalue);     // passes into the binarytreenode class method
+        }
+
+        internal void Remove(int existedvalue)
+        {
+            if (_Root == null)
+                throw new ArgumentNullException();
+            _Root.Remove(existedvalue);
         }
 
 
+        internal bool IsRepeated(int newvalue)
+        {
+
+        }
 
     }
 
-    public class BinaryTreeNode
+    internal class BinaryTreeNode
     {
         int _Value;     // head value
         BinaryTreeNode _LHS;    
         BinaryTreeNode _RHS;
         
-        public BinaryTreeNode (int newvalue)
+        internal BinaryTreeNode (int newvalue)
         {
             _Value = newvalue;          // initial value
         }
 
-        public void Add (int newvalue)
+        internal void Append (int newvalue)
         {
             // selection
             if (_LHS == null && newvalue < _Value)
@@ -63,17 +82,34 @@ namespace BinaryTree.Lib
             {
                 _RHS = new BinaryTreeNode(newvalue);    // add a new right node (from null)
             }
+            (newvalue >= _Value ? _RHS : _LHS).Append(newvalue);        // tertiary operator + recursion
+            // Apply .Append on _LHS or _RHS via recursion
+        }
+
+        internal void Remove (int existedvalue)
+        {
+
         }
                 
-        public bool IsLeaf(BinaryTreeNode thenode)
+        internal bool IsLeaf(BinaryTreeNode thenode)
         {
             return (_LHS == null && _RHS == null);
         }
 
-        public bool IsOneSideStem(BinaryTreeNode thenode)
+        internal bool IsOneSideStem(BinaryTreeNode thenode)
         {
             return (_LHS == null ^ _RHS == null);
+        }
+
+        internal bool IsRepeated(int newvalue)
+        {
+            if (_LHS == null || _RHS == null)
+            {
+                return false;
+            }
         }
     }
 
 }
+
+
