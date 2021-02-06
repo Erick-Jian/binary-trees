@@ -52,7 +52,6 @@ namespace BinaryTree.Lib
             _Root.Remove(existedvalue);
         }
 
-
         internal bool IsRepeated(int newvalue)
         {
 
@@ -75,22 +74,28 @@ namespace BinaryTree.Lib
         {
             // selection
             if (_LHS == null && newvalue < _Value)
-            {
                 _LHS = new BinaryTreeNode(newvalue);    // add a new left node (from null)
-            }
+            
             else if (_RHS == null && newvalue >= _Value)
-            {
                 _RHS = new BinaryTreeNode(newvalue);    // add a new right node (from null)
-            }
+            
             (newvalue >= _Value ? _RHS : _LHS).Append(newvalue);        // tertiary operator + recursion
             // Apply .Append on _LHS or _RHS via recursion
         }
 
         internal void Remove (int existedvalue)
         {
+            // selection
+            if (_LHS == null && existedvalue < _Value)
+                _LHS = _LHS._LHS;
 
+            else if (_RHS == null && existedvalue >= _Value)
+                _RHS = _RHS._RHS;
+
+            (existedvalue >= _Value ? _RHS : _LHS).Remove(existedvalue);        // tertiary operator + recursion
+            // Apply .Append on _LHS or _RHS via recursion
         }
-                
+
         internal bool IsLeaf(BinaryTreeNode thenode)
         {
             return (_LHS == null && _RHS == null);
@@ -111,5 +116,4 @@ namespace BinaryTree.Lib
     }
 
 }
-
 
