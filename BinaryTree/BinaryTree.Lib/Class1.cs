@@ -22,18 +22,18 @@ using System.Threading.Tasks;
 
 namespace BinaryTree.Lib
 {
-    public class BinaryTree
+    internal class BinaryTree
     {
         private BinaryTreeNode root;      // root position (the container)
         public BinaryTreeNode Root
         {   get { return root; }   }
 
-        public BinaryTree()
+        internal BinaryTree()
         {
             // default constructor: null
         }
 
-        public BinaryTree(int rootval)
+        internal BinaryTree(int rootval)
         {
             // default constructor: with root value taken in
             root = new BinaryTreeNode(rootval);      // generates an root node with initial I/P integer stored
@@ -46,7 +46,7 @@ namespace BinaryTree.Lib
             root.Append(newvalue);     // passes into the binarytreenode class method
         }
 
-        public void Remove(int existedvalue)
+        internal void Remove(int existedvalue)
         {
             if (root == null)
                 throw new ArgumentNullException();
@@ -60,7 +60,7 @@ namespace BinaryTree.Lib
         }
     }
 
-    public class BinaryTreeNode
+    internal class BinaryTreeNode
     {
         private int value;              // head value
         internal int Value
@@ -76,11 +76,11 @@ namespace BinaryTree.Lib
         {   get { return rhs; }
             set { rhs = value; }    }
         
-        public BinaryTreeNode (int newvalue)
+        internal BinaryTreeNode (int newvalue)
         {   value = newvalue;      }    // value container
 
 
-        public void Append (int newvalue)
+        internal void Append (int newvalue)
         {
             // selection
             if (lhs == null && newvalue < value)
@@ -89,24 +89,75 @@ namespace BinaryTree.Lib
             else if (rhs == null && newvalue >= value)
                 rhs = new BinaryTreeNode(newvalue);    // add a new right node (from null)
             
-            (newvalue >= value ? rhs : lhs).Append(newvalue);        // tertiary operator + recursion
+            (newvalue >= value ? rhs : lhs).Append(newvalue);        // tenary operator + recursion
             // Apply .Append on _LHS or _RHS via recursion
         }
 
-        public void Remove (int disposedvalue, BinaryTreeNode ROOT)
+        internal void Remove (int disposedvalue, BinaryTreeNode ROOT)
         {
             BinaryTreeNode AncestorNode = ROOT;     // the ancestor of a root node is itself
             BinaryTreeNode CurrentNode = ROOT;
+            bool IsOnLHS = false;
             
             while (CurrentNode != null && CurrentNode.Value != disposedvalue)
             {
-
+                AncestorNode = CurrentNode;         // it's going down the tree
                 CurrentNode = (disposedvalue < value ? CurrentNode.lhs : CurrentNode.rhs);
-                AncestorNode = CurrentNode;         // prepared for
+                IsOnLHS = (disposedvalue < value ? true : false);
+                // goes AFTER line "AncestorNode = CurrentNode" because LOOP STOPS when CurrentNode contains the value
             }
+            // afterthe node found, AncestorNode contains parent value; CurrentNode is one step beyond
 
+            // Left 0 Right 0: leaf
+            if (CurrentNode.LHS == null && CurrentNode.RHS == null)
+            {
+                // base case: root
+                if (CurrentNode == ROOT)
+                    throw new FieldAccessException("Accessibility of Root sucks");
+                else
+                {
+                    AncestorNode.LHS = null;
+                    AncestorNode.RHS = null;
+                }
+            }
+            // Left 1 Right 0: 1 child
+            else if (CurrentNode.RHS == null)
+            {
+                if (CurrentNode == ROOT)
+                    throw new FieldAccessException("Accessibility of Root sucks");
+                else
+                {
+                    if(IsOnLHS)
+                    {
 
-            return; // CurrentNode = null
+                    }
+
+                }
+            }
+            // Left 0 Right 1: 1 child 
+            else if (CurrentNode.LHS == null)
+            {
+                if (CurrentNode == ROOT)
+                    throw new FieldAccessException("Accessibility of Root sucks");
+                else
+                {
+                    AncestorNode.LHS = null;
+                    AncestorNode.RHS = null;
+                }
+            }
+            // Left 0 Right 0: 2 children
+            else
+            {
+                if (CurrentNode == ROOT)
+                    throw new FieldAccessException("Accessibility of Root sucks");
+                else
+                {
+                    AncestorNode.LHS = null;
+                    AncestorNode.RHS = null;
+                }
+            }
+            if (CurrentNode == null)
+                throw new ArgumentNullException("This is an Empty Tree ...");
         }
 
         internal bool IsLeaf(BinaryTreeNode thenode)
